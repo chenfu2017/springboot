@@ -1,30 +1,7 @@
 package com.chenfu.mapper;
 
 import com.chenfu.pojo.Users;
-import com.chenfu.pojo.UsersExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.chenfu.utils.MyMapper;
 
-public interface UsersMapper {
-    int countByExample(UsersExample example);
-
-    int deleteByExample(UsersExample example);
-
-    int deleteByPrimaryKey(String username);
-
-    int insert(Users record);
-
-    int insertSelective(Users record);
-
-    List<Users> selectByExample(UsersExample example);
-
-    Users selectByPrimaryKey(String username);
-
-    int updateByExampleSelective(@Param("record") Users record, @Param("example") UsersExample example);
-
-    int updateByExample(@Param("record") Users record, @Param("example") UsersExample example);
-
-    int updateByPrimaryKeySelective(Users record);
-
-    int updateByPrimaryKey(Users record);
+public interface UsersMapper extends MyMapper<Users> {
 }
