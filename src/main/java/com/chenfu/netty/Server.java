@@ -9,13 +9,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 @Component
-public class WSServer {
+public class Server {
 
 	private static class SingletionWSServer {
-		static final WSServer instance = new WSServer();
+		static final Server instance = new Server();
 	}
 	
-	public static WSServer getInstance() {
+	public static Server getInstance() {
 		return SingletionWSServer.instance;
 	}
 	
@@ -24,17 +24,17 @@ public class WSServer {
 	private ServerBootstrap server;
 	private ChannelFuture future;
 	
-	public WSServer() {
+	public Server() {
 		mainGroup = new NioEventLoopGroup();
 		subGroup = new NioEventLoopGroup();
 		server = new ServerBootstrap();
 		server.group(mainGroup, subGroup)
 			.channel(NioServerSocketChannel.class)
-			.childHandler(new WSServerInitialzer());
+			.childHandler(new JsonServerInitialzer());
 	}
 	
 	public void start() {
-		this.future = server.bind(8088);
+		this.future = server.bind(8888);
 		System.err.println("netty websocket server 启动完毕...");
 	}
 }
