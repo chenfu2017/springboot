@@ -6,6 +6,10 @@ public class Coordinate {
     private double longtitude;
     private double latitude;
 
+    public Coordinate() {
+
+    }
+
     public Coordinate(String id, double longtitude, double latitude) {
         this.id = id;
         this.longtitude = longtitude;

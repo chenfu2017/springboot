@@ -14,6 +14,10 @@ public class Driver {
 
     private int energy;
 
+    public Driver() {
+
+    }
+
     public Driver(String driverId, double longtitude, double latitude, int temperature, int humidity, int energy) {
         this.driverId = driverId;
         this.longtitude = longtitude;

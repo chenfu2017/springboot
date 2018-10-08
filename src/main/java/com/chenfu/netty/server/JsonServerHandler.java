@@ -10,10 +10,9 @@
 			}
 		});
  */
-package com.chenfu.netty;
+package com.chenfu.netty.server;
 
-import com.chenfu.pojo.DataContent;
-import com.chenfu.pojo.MsgActionEnum;
+import com.chenfu.pojo.*;
 import com.chenfu.utils.JsonUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,47 +25,44 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     public static ChannelGroup channels= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     public static ChannelGroup clients= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    public static ChannelGroup polices = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    public static ChannelGroup drivers= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-
-        System.out.println("from client : " + msg);
         String json = msg.substring(2);
+        String strObject = JsonUtils.findObject(json);
         System.out.println(json);
         Channel currentChannel = ctx.channel();
         DataContent dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
         Integer action = dataContent.getAction();
         Object object = dataContent.getObject();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
+            Coordinate coordinate = JsonUtils.jsonToPojo(strObject,Coordinate.class);
+            String id = coordinate.getId();
+            PoliceChannelRel.put(id,currentChannel);
+            System.out.println("from PoliceClient : " + json);
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
-            polices.add(currentChannel);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
+            System.out.println("from DriverClient : " + json);
+            Driver driver = JsonUtils.jsonToPojo(strObject, Driver.class);
+            String driverId = driver.getDriverId();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
-            drivers.add(currentChannel);
+            DriverChannelRel.put(driverId,currentChannel);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
+            System.out.println("from Client : " + json);
             clients.add(currentChannel);
+        } else if (action == MsgActionEnum.POLICE_LOGIN.type) {
+            Police police = JsonUtils.jsonToPojo(strObject, Police.class);
+            System.out.println(police.getPoliceId());
+            System.out.println(police.getPassword());
+            ctx.writeAndFlush("SUCCESS");
+        } else if (action==MsgActionEnum.SET_OUT.type){
+
         }
-    }
-
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        Channel channel = ctx.channel();
-        channels.add(ctx.channel());
-    }
-
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        // 发生异常之后关闭连接（关闭channel），随后从ChannelGroup中移除
-        ctx.channel().close();
-        channels.remove(ctx.channel());
     }
 }

@@ -1,4 +1,4 @@
-package com.chenfu.netty;
+package com.chenfu.netty.server;
 
 import org.springframework.stereotype.Component;
 

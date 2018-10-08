@@ -1,6 +1,6 @@
 package com.chenfu;
 
-import com.chenfu.netty.Server;
+import com.chenfu.netty.server.Server;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;

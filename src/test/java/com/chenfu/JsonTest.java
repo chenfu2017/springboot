@@ -15,7 +15,10 @@ public class JsonTest {
         dataContent.setObject(police);
 //         dataContent.setObject(driver);
         String json = JsonUtils.objectToJson(dataContent);
+        System.out.println(json);
         DataContent dataContent1 = JsonUtils.jsonToPojo(json, DataContent.class);
+        Police police1 = JsonUtils.jsonToPojo(JsonUtils.findObject(json), Police.class);
         System.out.println(dataContent1);
+        System.out.println(police1.getPoliceId());
     }
 }

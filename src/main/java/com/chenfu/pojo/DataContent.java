@@ -7,18 +7,6 @@ public class DataContent {
     private Object object;
     private String extand;
 
-    public DataContent(){
-    }
-
-    public DataContent(int action,Police police){
-        this.action = action;
-        this.object = police;
-    }
-    public DataContent(int action,Coordinate position){
-        this.action = action;
-        this.object = position;
-    }
-
     public Integer getAction() {
         return action;
     }
