@@ -1,4 +1,4 @@
-package com.chenfu.netty.server;
+package com.chenfu.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

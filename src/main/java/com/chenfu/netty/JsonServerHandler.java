@@ -10,7 +10,7 @@
 			}
 		});
  */
-package com.chenfu.netty.server;
+package com.chenfu.netty;
 
 import com.chenfu.pojo.*;
 import com.chenfu.utils.JsonUtils;
@@ -29,7 +29,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
-        System.out.println(json);
         Channel currentChannel = ctx.channel();
         DataContent dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
         Integer action = dataContent.getAction();
@@ -60,7 +59,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             System.out.println(police.getPassword());
             ctx.writeAndFlush("SUCCESS");
         } else if (action==MsgActionEnum.SET_OUT.type){
-
 
         }
     }
