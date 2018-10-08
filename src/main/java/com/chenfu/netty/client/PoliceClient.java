@@ -41,6 +41,10 @@ public class PoliceClient {
         dataContent.setObject(police);
         String s = JsonUtils.objectToJson(dataContent);
         dos.writeUTF(s);
+        InputStream dataIutputStream = soc.getInputStream();
+        byte[] bytes = new byte[100];
+        dataIutputStream.read(bytes);
+        System.out.println(new String(bytes, "UTF-8"));
     }
 
 }

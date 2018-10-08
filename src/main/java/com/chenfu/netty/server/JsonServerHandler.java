@@ -23,7 +23,6 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
-    public static ChannelGroup channels= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     public static ChannelGroup clients= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
@@ -34,7 +33,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         Channel currentChannel = ctx.channel();
         DataContent dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
         Integer action = dataContent.getAction();
-        Object object = dataContent.getObject();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
             Coordinate coordinate = JsonUtils.jsonToPojo(strObject,Coordinate.class);
             String id = coordinate.getId();
@@ -63,6 +61,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             ctx.writeAndFlush("SUCCESS");
         } else if (action==MsgActionEnum.SET_OUT.type){
 
+
         }
     }
+
 }
