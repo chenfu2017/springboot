@@ -28,16 +28,20 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        log.info("msg:{}",msg);
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
         Channel currentChannel = ctx.channel();
         DataContent dataContent = null;
         try {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
+            if (dataContent == null) {
+                currentChannel.writeAndFlush("JOSN CONVERT ERROR");
+                return;
+            }
         } catch (Exception e) {
+            log.error("exception e:{}",e);
             currentChannel.writeAndFlush("JOSN CONVERT ERROR");
-            currentChannel.close();
-            log.info("JOSN CONVERT ERROR:{}",msg);
             return;
         }
         Integer action = dataContent.getAction();
@@ -71,7 +75,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             log.info("from Client:{}",json);
             currentChannel.writeAndFlush("SUCCRSS");
             clients.add(currentChannel);
-            ctx.writeAndFlush("SUCCESS");
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
             Police police = JsonUtils.jsonToPojo(strObject, Police.class);
             String policeId = police.getPoliceId();

@@ -41,10 +41,11 @@ public class PoliceClient {
             dos.writeUTF(json);
             ios= soc.getInputStream();
             byte[] bytes = new byte[1000];
-            ios.read(bytes);
-            String s = new String(bytes, "UTF-8");
-            System.out.println(s);
-
+            while (true) {
+                ios.read(bytes);
+                String s = new String(bytes, "UTF-8");
+                System.out.println(s);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }finally {

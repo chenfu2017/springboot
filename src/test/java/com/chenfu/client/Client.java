@@ -17,7 +17,7 @@ public class Client {
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.CLIENT_CONNECT.type);
             dos.writeUTF(JsonUtils.objectToJson(dataContent));
-            byte[] bytes = new byte[1000];
+            byte[] bytes = new byte[100];
             InputStream dataIutputStream = soc.getInputStream();
             dataIutputStream.read(bytes);
             String s = new String(bytes, "UTF-8");
