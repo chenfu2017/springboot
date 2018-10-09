@@ -32,4 +32,9 @@ public class MessionServiceImpl implements MessionService {
         }
         return JSONResult.errorMsg("mession already exist!");
     }
+
+    @Override
+    public boolean isIllegitimate(String driverid) {
+        return false;
+    }
 }

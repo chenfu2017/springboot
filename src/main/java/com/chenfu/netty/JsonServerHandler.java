@@ -55,24 +55,25 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             }
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             log.info("from Driver:{} ",json);
-            Driver driver = JsonUtils.jsonToPojo(strObject, Driver.class);
-            String driverId = driver.getDriverid();
+            DriverVo driver = JsonUtils.jsonToPojo(strObject, DriverVo.class);
+            String driverid = driver.getDriverid();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
-            DriverChannelRel.put(driverId,currentChannel);
+            DriverChannelRel.put(driverid,currentChannel);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
-            if(MessionMap.isIllegitimate(driverId)){
-                String policeId = MessionMap.getPoliceId(driverId);
-                Channel policeChannel = PoliceChannelRel.get(policeId);
-                if (policeChannel==null){
-                    for (Channel channel :clients) {
-                        channel.writeAndFlush("police:"+policeId+"not online!");
-                    }
-                } else {
-                    policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
-                }
-            }
+
+//            if(MessionMap.isIllegitimate(driverId)){
+//                String policeId = MessionMap.getPoliceId(driverId);
+//                Channel policeChannel = PoliceChannelRel.get(policeId);
+//                if (policeChannel==null){
+//                    for (Channel channel :clients) {
+//                        channel.writeAndFlush("police:"+policeId+"not online!");
+//                    }
+//                } else {
+//                    policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
+//                }
+//            }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
             log.info("from Client:{}",json);
             currentChannel.writeAndFlush("SUCCRSS");
