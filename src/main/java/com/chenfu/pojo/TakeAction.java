@@ -6,6 +6,15 @@ public class TakeAction {
 
     private String driverId;
 
+    public TakeAction() {
+
+    }
+
+    public TakeAction(String policeId, String driverId) {
+        this.policeId = policeId;
+        this.driverId = driverId;
+    }
+
     public String getPoliceId() {
         return policeId;
     }

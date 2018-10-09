@@ -33,14 +33,12 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         DataContent dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
         Integer action = dataContent.getAction();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
-            Coordinate coordinate = JsonUtils.jsonToPojo(strObject,Coordinate.class);
-            String id = coordinate.getId();
-            PoliceChannelRel.put(id,currentChannel);
             System.out.println("from PoliceClient : " + json);
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
+            currentChannel.writeAndFlush("from server:already receive!");
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             System.out.println("from DriverClient : " + json);
             Driver driver = JsonUtils.jsonToPojo(strObject, Driver.class);
@@ -50,16 +48,35 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
+            if(Mission.isIllegitimate(driverId)){
+                String policeId = Mission.getPoliceId(driverId);
+                Channel policeChannel = PoliceChannelRel.get(policeId);
+                if (policeChannel==null){
+                    for (Channel channel :clients) {
+                        channel.writeAndFlush("police:"+policeId+"not online!");
+                    }
+                } else {
+                    policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
+                }
+            }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
             System.out.println("from Client : " + json);
+            currentChannel.writeAndFlush("from server:already receive!");
             clients.add(currentChannel);
-        } else if (action == MsgActionEnum.POLICE_LOGIN.type) {
-            Police police = JsonUtils.jsonToPojo(strObject, Police.class);
-            System.out.println(police.getPoliceId());
-            System.out.println(police.getPassword());
             ctx.writeAndFlush("SUCCESS");
-        } else if (action==MsgActionEnum.SET_OUT.type){
-
+        } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
+            Police police = JsonUtils.jsonToPojo(strObject, Police.class);
+            String policeId = police.getPoliceId();
+            System.out.println(policeId);
+            PoliceChannelRel.put(policeId,currentChannel);
+            ctx.writeAndFlush("SUCCESS");
+        } else if (action==MsgActionEnum.MESSION.type){
+            TakeAction takeAction = JsonUtils.jsonToPojo(strObject,TakeAction.class);
+            String policeId = takeAction.getPoliceId();
+            String driverId = takeAction.getDriverId();
+            Mission.add(driverId,policeId);
+            ctx.writeAndFlush("SUCCESS");
+            System.out.println("mession already add!");
         }
     }
 
