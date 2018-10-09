@@ -24,7 +24,7 @@ public class JsonUtils {
     public static String objectToJson(Object data) {
         try {
             String string = MAPPER.writeValueAsString(data);
-            return string;
+            return string+"$";
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

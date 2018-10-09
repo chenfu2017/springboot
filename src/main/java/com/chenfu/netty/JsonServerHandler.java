@@ -28,7 +28,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        log.info("msg:{}",msg);
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
         Channel currentChannel = ctx.channel();
@@ -36,6 +35,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         try {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
             if (dataContent == null) {
+                log.info("msg:{}",msg);
                 currentChannel.writeAndFlush("JOSN CONVERT ERROR");
                 return;
             }
