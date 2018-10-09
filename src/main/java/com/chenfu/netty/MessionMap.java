@@ -2,7 +2,7 @@ package com.chenfu.netty;
 
 import java.util.HashMap;
 
-public class Mission {
+public class MessionMap {
 
     private static HashMap<String, String> tasks = new HashMap<>();
 

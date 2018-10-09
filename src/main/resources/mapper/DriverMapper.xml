@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenfu.mapper.DriverMapper" >
+  <resultMap id="BaseResultMap" type="com.chenfu.pojo.Driver" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="driverid" property="driverid" jdbcType="VARCHAR" />
+    <result column="temperature" property="temperature" jdbcType="INTEGER" />
+    <result column="humidity" property="humidity" jdbcType="INTEGER" />
+    <result column="energy" property="energy" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

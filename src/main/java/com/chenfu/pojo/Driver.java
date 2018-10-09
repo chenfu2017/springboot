@@ -1,77 +1,80 @@
 package com.chenfu.pojo;
 
+import javax.persistence.*;
+
 public class Driver {
+    @Id
+    private String driverid;
 
-    private String driverId;
+    private Integer temperature;
 
-    private double longtitude;
+    private Integer humidity;
 
-    private double latitude;
-
-    private int  temperature;
-
-    private int humidity;
-
-    private int energy;
+    private Integer energy;
 
     public Driver() {
-
     }
 
-    public Driver(String driverId, double longtitude, double latitude, int temperature, int humidity, int energy) {
-        this.driverId = driverId;
-        this.longtitude = longtitude;
-        this.latitude = latitude;
+    public Driver(String driverid, Integer temperature, Integer humidity, Integer energy) {
+        this.driverid = driverid;
         this.temperature = temperature;
         this.humidity = humidity;
         this.energy = energy;
     }
 
-    public String getDriverId() {
-        return driverId;
+    /**
+     * @return driverid
+     */
+    public String getDriverid() {
+        return driverid;
     }
 
-    public void setDriverId(String driverId) {
-        this.driverId = driverId;
+    /**
+     * @param driverid
+     */
+    public void setDriverid(String driverid) {
+        this.driverid = driverid;
     }
 
-    public double getLongtitude() {
-        return longtitude;
-    }
-
-    public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public int getTemperature() {
+    /**
+     * @return temperature
+     */
+    public Integer getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    /**
+     * @param temperature
+     */
+    public void setTemperature(Integer temperature) {
         this.temperature = temperature;
     }
 
-    public int getHumidity() {
+    /**
+     * @return humidity
+     */
+    public Integer getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    /**
+     * @param humidity
+     */
+    public void setHumidity(Integer humidity) {
         this.humidity = humidity;
     }
 
-    public int getEnergy() {
+    /**
+     * @return energy
+     */
+    public Integer getEnergy() {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    /**
+     * @param energy
+     */
+    public void setEnergy(Integer energy) {
         this.energy = energy;
     }
 }

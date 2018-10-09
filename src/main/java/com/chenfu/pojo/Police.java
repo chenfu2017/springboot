@@ -1,22 +1,53 @@
 package com.chenfu.pojo;
 
+import javax.persistence.*;
+
 public class Police {
-    private String policeId;
+    @Id
+    private String policeid;
+
+    private String nickname;
 
     private String password;
 
-    public String getPoliceId() {
-        return policeId;
+    /**
+     * @return policeid
+     */
+    public String getPoliceid() {
+        return policeid;
     }
 
-    public void setPoliceId(String policeId) {
-        this.policeId = policeId;
+    /**
+     * @param policeid
+     */
+    public void setPoliceid(String policeid) {
+        this.policeid = policeid;
     }
 
+    /**
+     * @return nickname
+     */
+    public String getNickname() {
+        return nickname;
+    }
+
+    /**
+     * @param nickname
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    /**
+     * @return password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }

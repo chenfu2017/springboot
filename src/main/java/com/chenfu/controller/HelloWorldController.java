@@ -23,7 +23,6 @@ public class HelloWorldController {
 
         Resource bean = new Resource();
         BeanUtils.copyProperties(resource, bean);
-
         return JSONResult.ok(bean);
     }
 

@@ -12,7 +12,9 @@
  */
 package com.chenfu.netty;
 
+import com.chenfu.SpringUtil;
 import com.chenfu.pojo.*;
+import com.chenfu.service.MessionService;
 import com.chenfu.utils.JsonUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -54,14 +56,14 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             log.info("from Driver:{} ",json);
             Driver driver = JsonUtils.jsonToPojo(strObject, Driver.class);
-            String driverId = driver.getDriverId();
+            String driverId = driver.getDriverid();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
             DriverChannelRel.put(driverId,currentChannel);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
-            if(Mission.isIllegitimate(driverId)){
-                String policeId = Mission.getPoliceId(driverId);
+            if(MessionMap.isIllegitimate(driverId)){
+                String policeId = MessionMap.getPoliceId(driverId);
                 Channel policeChannel = PoliceChannelRel.get(policeId);
                 if (policeChannel==null){
                     for (Channel channel :clients) {
@@ -76,18 +78,18 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             currentChannel.writeAndFlush("SUCCRSS");
             clients.add(currentChannel);
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
+            log.info("police connect:{}",json);
             Police police = JsonUtils.jsonToPojo(strObject, Police.class);
-            String policeId = police.getPoliceId();
-            System.out.println(policeId);
-            PoliceChannelRel.put(policeId,currentChannel);
+            PoliceChannelRel.put(police.getPoliceid(),currentChannel);
             currentChannel.writeAndFlush("SUCCESS");
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession add.{}",json);
-            TakeAction takeAction = JsonUtils.jsonToPojo(strObject,TakeAction.class);
-            String policeId = takeAction.getPoliceId();
-            String driverId = takeAction.getDriverId();
-            Mission.add(driverId,policeId);
-            currentChannel.writeAndFlush("SUCCESS");
+            Mession mession = JsonUtils.jsonToPojo(strObject,Mession.class);
+            String policeid = mession.getPoliceid();
+            String driverid = mession.getDriverid();
+            MessionService messionService = SpringUtil.getBean(MessionService.class);
+            JSONResult jsonResult = messionService.addMession(policeid, driverid);
+            currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         }
     }
 
