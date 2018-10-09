@@ -7,24 +7,19 @@ import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.pojo.Police;
 import com.chenfu.utils.JsonUtils;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-@TestPropertySource("classpath:resource.properties")
 public class PoliceClient {
-    @Value("${com.chenfu.address}")
-    private String address;
-    @Test
-    public void fun() {
+
+
+    public static void main(String[] args) {
         DataOutputStream dos = null;
         Socket soc = null;
         InputStream ios = null;
         try{
-            soc = new Socket(address,8888);
+            soc = new Socket("127.0.0.1",8888);
             dos = new DataOutputStream(soc.getOutputStream());
             DataContent connect=new DataContent();
             Police police = new Police();
@@ -33,7 +28,7 @@ public class PoliceClient {
             connect.setAction(MsgActionEnum.POLICE_CONNECT.type);
             connect.setObject(police);
             String json = JsonUtils.objectToJson(connect);
-            System.out.println(json);
+//            System.out.println(json);
             dos.writeUTF(json);
             Thread.sleep(2);
 
@@ -42,7 +37,7 @@ public class PoliceClient {
             Coordinate coordinate = new Coordinate("police",133, 123);
             dataContent.setObject(coordinate);
             json = JsonUtils.objectToJson(dataContent);
-            System.out.println(json);
+//            System.out.println(json);
             dos.writeUTF(json);
             ios= soc.getInputStream();
             byte[] bytes = new byte[1000];

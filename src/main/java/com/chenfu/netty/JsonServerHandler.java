@@ -20,7 +20,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     public static ChannelGroup clients= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -30,17 +31,24 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
         Channel currentChannel = ctx.channel();
-        DataContent dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
+        DataContent dataContent = null;
+        try {
+            dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
+        } catch (Exception e) {
+            currentChannel.writeAndFlush("JOSN CONVERT ERROR");
+            currentChannel.close();
+            log.info("JOSN CONVERT ERROR:{}",msg);
+            return;
+        }
         Integer action = dataContent.getAction();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
-            System.out.println("from PoliceClient : " + json);
+            log.info("from Police:{} ",json);
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
-            currentChannel.writeAndFlush("from server:already receive!");
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
-            System.out.println("from DriverClient : " + json);
+            log.info("from Driver:{} ",json);
             Driver driver = JsonUtils.jsonToPojo(strObject, Driver.class);
             String driverId = driver.getDriverId();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
@@ -60,8 +68,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
                 }
             }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
-            System.out.println("from Client : " + json);
-            currentChannel.writeAndFlush("from server:already receive!");
+            log.info("from Client:{}",json);
+            currentChannel.writeAndFlush("SUCCRSS");
             clients.add(currentChannel);
             ctx.writeAndFlush("SUCCESS");
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
@@ -69,14 +77,14 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             String policeId = police.getPoliceId();
             System.out.println(policeId);
             PoliceChannelRel.put(policeId,currentChannel);
-            ctx.writeAndFlush("SUCCESS");
+            currentChannel.writeAndFlush("SUCCESS");
         } else if (action==MsgActionEnum.MESSION.type){
+            log.info("a mession add.{}",json);
             TakeAction takeAction = JsonUtils.jsonToPojo(strObject,TakeAction.class);
             String policeId = takeAction.getPoliceId();
             String driverId = takeAction.getDriverId();
             Mission.add(driverId,policeId);
-            ctx.writeAndFlush("SUCCESS");
-            System.out.println("mession already add!");
+            currentChannel.writeAndFlush("SUCCESS");
         }
     }
 
