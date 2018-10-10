@@ -10,6 +10,8 @@ public class Mession {
     @Id
     private String driverid;
 
+    private Boolean finish;
+
     @Column(name = "create_time")
     private Date createTime;
 
@@ -20,7 +22,6 @@ public class Mession {
         this.policeid = policeid;
         this.driverid = driverid;
     }
-
     /**
      * @return policeid
      */
@@ -47,6 +48,20 @@ public class Mession {
      */
     public void setDriverid(String driverid) {
         this.driverid = driverid;
+    }
+
+    /**
+     * @return finish
+     */
+    public Boolean getFinish() {
+        return finish;
+    }
+
+    /**
+     * @param finish
+     */
+    public void setFinish(Boolean finish) {
+        this.finish = finish;
     }
 
     /**

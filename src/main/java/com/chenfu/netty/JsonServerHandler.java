@@ -40,12 +40,14 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         try {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
             if (dataContent == null) {
-                log.info("msg:{}",msg);
+                log.error("msg:{}",msg);
+                log.error("JOSN CONVERT ERROR");
                 currentChannel.writeAndFlush("JOSN CONVERT ERROR");
                 return;
             }
         } catch (Exception e) {
             log.error("exception e:{}",e);
+            log.error("JOSN CONVERT ERROR");
             currentChannel.writeAndFlush("JOSN CONVERT ERROR");
             return;
         }
@@ -86,26 +88,24 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
             if(jsonResult.getStatus()==200){
                 PoliceChannelRel.put(police.getPoliceid(),currentChannel);
-                PoliceChannelRel.output();
+                log.info("online list:{}:",PoliceChannelRel.getAllPoliceid());
             }
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
-            log.info("a mession add.{}",json);
+            log.info("a mession:{}",json);
             Mession mession = JsonUtils.jsonToPojo(strObject,Mession.class);
             String policeid = mession.getPoliceid();
             String driverid = mession.getDriverid();
             JSONResult jsonResult = messionService.addMession(policeid, driverid);
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         }
-        PoliceChannelRel.output();
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
 
         String channelId = ctx.channel().id().asShortText();
-        System.out.println("客户端被移除，channelId为：" + channelId);
-        // 当触发handlerRemoved，ChannelGroup会自动移除对应客户端的channel
+        log.info("客户端被移除，channelId为:{}",channelId);
         clients.remove(ctx.channel());
     }
 

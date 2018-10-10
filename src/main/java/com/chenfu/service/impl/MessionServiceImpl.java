@@ -18,16 +18,28 @@ public class MessionServiceImpl implements MessionService {
     private MessionMapper messionMapper;
 
     public JSONResult addMession(String policeid,String driverid) {
-        Mession mession = new Mession();
-        mession.setDriverid(driverid);
-        mession.setPoliceid(policeid);
-        boolean exists = messionMapper.existsWithPrimaryKey(mession);
-        if(exists){
-            return JSONResult.errorMsg("mession already exist!");
-        } else {
+        Example example = new Example(Mession.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("driverid",driverid);
+        criteria.andEqualTo("policeid",policeid);
+        Mession mession = messionMapper.selectOneByExample(example);
+        if(mession==null){
+            mession = new Mession();
+            mession.setPoliceid(policeid);
+            mession.setDriverid(driverid);
             mession.setCreateTime(new Date());
+            mession.setFinish(false);
             messionMapper.insert(mession);
             return JSONResult.ok();
+        } else {
+            if(mession.getFinish()==true){
+                mession.setFinish(false);
+                mession.setCreateTime(new Date());
+                messionMapper.updateByPrimaryKey(mession);
+                return JSONResult.ok();
+            } else {
+                return JSONResult.errorMsg("mession already exist!");
+            }
         }
     }
 
