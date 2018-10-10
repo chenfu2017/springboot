@@ -15,6 +15,7 @@ package com.chenfu.netty;
 import com.chenfu.SpringUtil;
 import com.chenfu.pojo.*;
 import com.chenfu.service.MessionService;
+import com.chenfu.service.PoliceService;
 import com.chenfu.utils.JsonUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,6 +34,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
         Channel currentChannel = ctx.channel();
+        MessionService messionService = SpringUtil.getBean(MessionService.class);
         DataContent dataContent = null;
         try {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
@@ -58,22 +60,20 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             DriverVo driver = JsonUtils.jsonToPojo(strObject, DriverVo.class);
             String driverid = driver.getDriverid();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
-            DriverChannelRel.put(driverid,currentChannel);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
-
-//            if(MessionMap.isIllegitimate(driverId)){
-//                String policeId = MessionMap.getPoliceId(driverId);
-//                Channel policeChannel = PoliceChannelRel.get(policeId);
-//                if (policeChannel==null){
-//                    for (Channel channel :clients) {
-//                        channel.writeAndFlush("police:"+policeId+"not online!");
-//                    }
-//                } else {
-//                    policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
-//                }
-//            }
+            String policeid = messionService.getPoliceid(driverid);
+            if (policeid != null) {
+                Channel policeChannel = PoliceChannelRel.get(policeid);
+                if (policeChannel==null){
+                    for (Channel channel :clients) {
+                        channel.writeAndFlush("police:"+policeid+"not online!");
+                    }
+                } else {
+                    policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
+                }
+            }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
             log.info("from Client:{}",json);
             currentChannel.writeAndFlush("SUCCRSS");
@@ -81,17 +81,37 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
             log.info("police connect:{}",json);
             Police police = JsonUtils.jsonToPojo(strObject, Police.class);
-            PoliceChannelRel.put(police.getPoliceid(),currentChannel);
-            currentChannel.writeAndFlush("SUCCESS");
+            PoliceService policeService = SpringUtil.getBean(PoliceService.class);
+            JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
+            if(jsonResult.getStatus()==200){
+                PoliceChannelRel.put(police.getPoliceid(),currentChannel);
+                PoliceChannelRel.output();
+            }
+            currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession add.{}",json);
             Mession mession = JsonUtils.jsonToPojo(strObject,Mession.class);
             String policeid = mession.getPoliceid();
             String driverid = mession.getDriverid();
-            MessionService messionService = SpringUtil.getBean(MessionService.class);
             JSONResult jsonResult = messionService.addMession(policeid, driverid);
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         }
+        PoliceChannelRel.output();
     }
 
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+
+        String channelId = ctx.channel().id().asShortText();
+        System.out.println("客户端被移除，channelId为：" + channelId);
+        // 当触发handlerRemoved，ChannelGroup会自动移除对应客户端的channel
+        clients.remove(ctx.channel());
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("exception:{}",cause.getMessage());
+        ctx.channel().close();
+        clients.remove(ctx.channel());
+    }
 }

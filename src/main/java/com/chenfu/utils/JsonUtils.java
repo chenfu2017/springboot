@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import sun.font.TrueTypeFont;
 
 /**
  * @Description: 自定义响应结构, 转换类
@@ -69,12 +70,27 @@ public class JsonUtils {
 
     public static String findObject(String json) {
         char[] chars = json.toCharArray();
-        int i =2;
-        int j =chars.length-2;
-        while (chars[i]!='{'&&i<j) {
+        int i =0;
+        int j =chars.length-1;
+        boolean flag=true;
+        while (i<j) {
+            if (chars[i]=='{'){
+                if(flag==true) {
+                    flag =false;
+                }else {
+                    break;
+                }
+            }
             i++;
         }
-        while (chars[j]!='}'&&j>i) {
+        while (i < j) {
+            if (chars[j]=='}'){
+                if(flag==false) {
+                    flag =true;
+                }else {
+                    break;
+                }
+            }
             j--;
         }
         if (i >= j) {

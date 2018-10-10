@@ -1,6 +1,7 @@
 package com.chenfu.service.impl;
 
 import com.chenfu.mapper.PoliceMapper;
+import com.chenfu.pojo.JSONResult;
 import com.chenfu.pojo.Police;
 import com.chenfu.service.PoliceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,18 @@ public class PoliceServiceImpl implements PoliceService {
         Example.Criteria criteria = example.createCriteria();
         List<Police> polices = policeMapper.selectByExample(example);
         return polices;
+    }
+
+    @Override
+    public JSONResult login(String policeid,String password) {
+        Example example = new Example(Police.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("policeid",policeid);
+        criteria.andEqualTo("password", password);
+        Police police = policeMapper.selectOneByExample(example);
+        if (police!=null){
+            return JSONResult.ok();
+        }
+        return JSONResult.errorMsg("Incorrect username or password!");
     }
 }
