@@ -1,7 +1,5 @@
 package com.chenfu.client;
 
-
-
 import com.chenfu.pojo.Coordinate;
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;

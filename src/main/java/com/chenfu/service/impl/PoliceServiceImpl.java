@@ -4,11 +4,13 @@ import com.chenfu.mapper.PoliceMapper;
 import com.chenfu.pojo.JSONResult;
 import com.chenfu.pojo.Police;
 import com.chenfu.service.PoliceService;
+import com.chenfu.utils.PoliceChannelRel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PoliceServiceImpl implements PoliceService {
@@ -36,5 +38,10 @@ public class PoliceServiceImpl implements PoliceService {
             return JSONResult.ok();
         }
         return JSONResult.errorMsg("Incorrect username or password!");
+    }
+
+    @Override
+    public Set<String> getOnlinePoliceid() {
+        return PoliceChannelRel.getAllPoliceid();
     }
 }

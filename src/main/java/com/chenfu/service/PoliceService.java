@@ -5,10 +5,13 @@ import com.chenfu.pojo.JSONResult;
 import com.chenfu.pojo.Police;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PoliceService {
 
-    public List<Police> getPolices();
+     List<Police> getPolices();
 
-    public JSONResult login(String policeid, String password);
+     JSONResult login(String policeid, String password);
+
+     Set<String> getOnlinePoliceid();
 }
