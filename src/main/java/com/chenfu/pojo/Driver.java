@@ -6,21 +6,13 @@ public class Driver {
     @Id
     private String driverid;
 
-    private Integer temperature;
+    private String name;
 
-    private Integer humidity;
+    private Integer sex;
 
-    private Integer energy;
+    private String address;
 
-    public Driver() {
-    }
-
-    public Driver(String driverid, Integer temperature, Integer humidity, Integer energy) {
-        this.driverid = driverid;
-        this.temperature = temperature;
-        this.humidity = humidity;
-        this.energy = energy;
-    }
+    private String carnumber;
 
     /**
      * @return driverid
@@ -37,44 +29,58 @@ public class Driver {
     }
 
     /**
-     * @return temperature
+     * @return name
      */
-    public Integer getTemperature() {
-        return temperature;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param temperature
+     * @param name
      */
-    public void setTemperature(Integer temperature) {
-        this.temperature = temperature;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * @return humidity
+     * @return sex
      */
-    public Integer getHumidity() {
-        return humidity;
+    public Integer getSex() {
+        return sex;
     }
 
     /**
-     * @param humidity
+     * @param sex
      */
-    public void setHumidity(Integer humidity) {
-        this.humidity = humidity;
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     /**
-     * @return energy
+     * @return address
      */
-    public Integer getEnergy() {
-        return energy;
+    public String getAddress() {
+        return address;
     }
 
     /**
-     * @param energy
+     * @param address
      */
-    public void setEnergy(Integer energy) {
-        this.energy = energy;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return carnumber
+     */
+    public String getCarnumber() {
+        return carnumber;
+    }
+
+    /**
+     * @param carnumber
+     */
+    public void setCarnumber(String carnumber) {
+        this.carnumber = carnumber;
     }
 }

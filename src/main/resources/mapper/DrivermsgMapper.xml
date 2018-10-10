@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chenfu.mapper.CoordinateMapper" >
-  <resultMap id="BaseResultMap" type="com.chenfu.pojo.Coordinate" >
+<mapper namespace="com.chenfu.mapper.DrivermsgMapper" >
+  <resultMap id="BaseResultMap" type="com.chenfu.pojo.Drivermsg" >
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" property="id" jdbcType="VARCHAR" />
+    <id column="driverid" property="driverid" jdbcType="VARCHAR" />
     <result column="longtitude" property="longtitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="temperature" property="temperature" jdbcType="INTEGER" />
+    <result column="humidity" property="humidity" jdbcType="INTEGER" />
+    <result column="energy" property="energy" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
 </mapper>

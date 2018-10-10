@@ -6,6 +6,12 @@ public class Police {
     @Id
     private String policeid;
 
+    private Integer sex;
+
+    private String address;
+
+    private String organization;
+
     private String nickname;
 
     private String password;
@@ -22,6 +28,48 @@ public class Police {
      */
     public void setPoliceid(String policeid) {
         this.policeid = policeid;
+    }
+
+    /**
+     * @return sex
+     */
+    public Integer getSex() {
+        return sex;
+    }
+
+    /**
+     * @param sex
+     */
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    /**
+     * @return address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * @return organization
+     */
+    public String getOrganization() {
+        return organization;
+    }
+
+    /**
+     * @param organization
+     */
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     /**

@@ -3,38 +3,38 @@ package com.chenfu.pojo;
 import java.util.Date;
 import javax.persistence.*;
 
-public class Coordinate {
+public class Policemsg {
     @Id
-    private String id;
+    private String policeid;
 
     private Double longtitude;
 
     private Double latitude;
 
-    public Coordinate() {
+    @Column(name = "create_time")
+    private Date createTime;
+
+    public Policemsg() {
     }
 
-    public Coordinate(String id, Double longtitude, Double latitude) {
-        this.id = id;
+    public Policemsg(String policeid, Double longtitude, Double latitude) {
+        this.policeid = policeid;
         this.longtitude = longtitude;
         this.latitude = latitude;
     }
 
-    @Column(name = "create_time")
-    private Date createTime;
-
     /**
-     * @return id
+     * @return policeid
      */
-    public String getId() {
-        return id;
+    public String getPoliceid() {
+        return policeid;
     }
 
     /**
-     * @param id
+     * @param policeid
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setPoliceid(String policeid) {
+        this.policeid = policeid;
     }
 
     /**

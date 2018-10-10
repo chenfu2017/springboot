@@ -18,8 +18,7 @@ public class DriverClient {
             DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE.type);
-            Driver driver = new Driver("driver",4,5,6);
-            DriverVo driverVo = new DriverVo(driver,123.123,11.111);
+            DriverVo driverVo = new DriverVo("driver",123.123,121.123,2,3,4);
             dataContent.setObject(driverVo);
             String json = JsonUtils.objectToJson(dataContent);
 //            System.out.println(json);

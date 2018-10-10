@@ -6,8 +6,9 @@
       WARNING - @mbg.generated
     -->
     <id column="driverid" property="driverid" jdbcType="VARCHAR" />
-    <result column="temperature" property="temperature" jdbcType="INTEGER" />
-    <result column="humidity" property="humidity" jdbcType="INTEGER" />
-    <result column="energy" property="energy" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="carnumber" property="carnumber" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

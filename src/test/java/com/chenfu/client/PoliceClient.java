@@ -1,9 +1,9 @@
 package com.chenfu.client;
 
-import com.chenfu.pojo.Coordinate;
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.pojo.Police;
+import com.chenfu.pojo.Policemsg;
 import com.chenfu.utils.JsonUtils;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -36,8 +36,8 @@ public class PoliceClient {
             System.out.println(s);
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE.type);
-            Coordinate coordinate = new Coordinate("police",133.12, 123.123);
-            dataContent.setObject(coordinate);
+            Policemsg policemsg = new Policemsg("police",133.12, 123.123);
+            dataContent.setObject(policemsg);
             json = JsonUtils.objectToJson(dataContent);
             System.out.println(json);
             dos.writeUTF(json);
