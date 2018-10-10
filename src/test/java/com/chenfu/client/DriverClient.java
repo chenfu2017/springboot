@@ -2,6 +2,7 @@ package com.chenfu.client;
 
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.Driver;
+import com.chenfu.pojo.DriverVo;
 import com.chenfu.pojo.MsgActionEnum;
 import com.chenfu.utils.JsonUtils;
 import java.io.DataOutputStream;
@@ -17,8 +18,9 @@ public class DriverClient {
             DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE.type);
-            Driver driver = new Driver("driver",123.23,23.111,4,5,6);
-            dataContent.setObject(driver);
+            Driver driver = new Driver("driver",4,5,6);
+            DriverVo driverVo = new DriverVo(driver,123.123,11.111);
+            dataContent.setObject(driverVo);
             String json = JsonUtils.objectToJson(dataContent);
 //            System.out.println(json);
             dos.writeUTF(json);
