@@ -1,8 +1,8 @@
 package com.chenfu.controller;
 
 import com.chenfu.pojo.Police;
+import com.chenfu.pojo.Policemsg;
 import com.chenfu.service.PoliceService;
-import com.chenfu.utils.PoliceChannelRel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +24,7 @@ public class PoliceController {
     }
 
     @RequestMapping("/showOnline")
-    private Set<String> getOnlinePoliceid() {
-        return policeService.getOnlinePoliceid();
+    private Set<Policemsg> getOnlinePolices() {
+        return policeService.getOnlinePolices();
     }
 }

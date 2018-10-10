@@ -1,6 +1,7 @@
 package com.chenfu.pojo;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 public class Police {
     @Id
@@ -99,4 +100,5 @@ public class Police {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

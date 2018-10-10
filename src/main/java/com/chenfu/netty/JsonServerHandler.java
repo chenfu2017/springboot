@@ -17,7 +17,6 @@ import com.chenfu.pojo.*;
 import com.chenfu.service.MessionService;
 import com.chenfu.service.PoliceService;
 import com.chenfu.utils.JsonUtils;
-import com.chenfu.utils.PoliceChannelRel;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -35,7 +34,6 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         String json = msg.substring(2);
         String strObject = JsonUtils.findObject(json);
         Channel currentChannel = ctx.channel();
-        MessionService messionService = SpringUtil.getBean(MessionService.class);
         DataContent dataContent = null;
         try {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
@@ -54,21 +52,27 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         Integer action = dataContent.getAction();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
             log.info("from Police:{} ",json);
+            Policemsg policemsg = JsonUtils.jsonToPojo(strObject, Policemsg.class);
+            PolicemsgChannelRel.put(policemsg,currentChannel);
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             log.info("from Driver:{} ",json);
-            DriverVo driver = JsonUtils.jsonToPojo(strObject, DriverVo.class);
-            String driverid = driver.getDriverid();
+            Drivermsg drivermsg = JsonUtils.jsonToPojo(strObject, Drivermsg.class);
+            DrivermsgChannelRel.put(drivermsg,currentChannel);
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
             }
+            MessionService messionService = SpringUtil.getBean(MessionService.class);
+            String driverid=drivermsg.getDriverid();
             String policeid = messionService.getPoliceid(driverid);
             if (policeid != null) {
-                Channel policeChannel = PoliceChannelRel.get(policeid);
+                Policemsg policemsg = new Policemsg();
+                policemsg.setPoliceid(policeid);
+                Channel policeChannel = PolicemsgChannelRel.getChannel(policemsg);
                 if (policeChannel==null){
                     for (Channel channel :clients) {
                         channel.writeAndFlush("police:"+policeid+"not online!");
@@ -86,16 +90,13 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             Police police = JsonUtils.jsonToPojo(strObject, Police.class);
             PoliceService policeService = SpringUtil.getBean(PoliceService.class);
             JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
-            if(jsonResult.getStatus()==200){
-                PoliceChannelRel.put(police.getPoliceid(),currentChannel);
-                log.info("online list:{}:",PoliceChannelRel.getAllPoliceid());
-            }
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession:{}",json);
             Mession mession = JsonUtils.jsonToPojo(strObject,Mession.class);
             String policeid = mession.getPoliceid();
             String driverid = mession.getDriverid();
+            MessionService messionService = SpringUtil.getBean(MessionService.class);
             JSONResult jsonResult = messionService.addMession(policeid, driverid);
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         }
@@ -103,16 +104,21 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        Channel channel =ctx.channel();
+        log.info("客户端被移除，channelId为:{}",channel.id().asShortText());
+        PolicemsgChannelRel.removeByChannel(channel);
+        DrivermsgChannelRel.removeByChannel(channel);
+        clients.remove(channel);
 
-        String channelId = ctx.channel().id().asShortText();
-        log.info("客户端被移除，channelId为:{}",channelId);
-        clients.remove(ctx.channel());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("exception:{}",cause.getMessage());
-        ctx.channel().close();
-        clients.remove(ctx.channel());
+        Channel channel =ctx.channel();
+        channel.close();
+        PolicemsgChannelRel.removeByChannel(channel);
+        DrivermsgChannelRel.removeByChannel(channel);
+        clients.remove(channel);
     }
 }

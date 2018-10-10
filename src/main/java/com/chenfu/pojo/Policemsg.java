@@ -1,5 +1,7 @@
 package com.chenfu.pojo;
 
+import com.google.common.base.Objects;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -77,5 +79,27 @@ public class Policemsg {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Policemsg policemsg = (Policemsg) o;
+        return Objects.equal(policeid, policemsg.policeid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(policeid);
+    }
+
+    @Override
+    public String toString() {
+        return "Policemsg{" +
+                "policeid='" + policeid + '\'' +
+                ", longtitude=" + longtitude +
+                ", latitude=" + latitude +
+                '}';
     }
 }

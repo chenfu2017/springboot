@@ -1,5 +1,7 @@
 package com.chenfu.pojo;
 
+import com.google.common.base.Objects;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -19,6 +21,18 @@ public class Drivermsg {
 
     @Column(name = "create_time")
     private Date createTime;
+
+    public Drivermsg() {
+    }
+
+    public Drivermsg(String driverid, Double longtitude, Double latitude, Integer temperature, Integer humidity, Integer energy) {
+        this.driverid = driverid;
+        this.longtitude = longtitude;
+        this.latitude = latitude;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.energy = energy;
+    }
 
     /**
      * @return driverid
@@ -116,5 +130,30 @@ public class Drivermsg {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Drivermsg drivermsg = (Drivermsg) o;
+        return Objects.equal(driverid, drivermsg.driverid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(driverid);
+    }
+
+    @Override
+    public String toString() {
+        return "Drivermsg{" +
+                "driverid='" + driverid + '\'' +
+                ", longtitude=" + longtitude +
+                ", latitude=" + latitude +
+                ", temperature=" + temperature +
+                ", humidity=" + humidity +
+                ", energy=" + energy +
+                '}';
     }
 }
