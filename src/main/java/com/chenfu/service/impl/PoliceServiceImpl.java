@@ -1,7 +1,7 @@
 package com.chenfu.service.impl;
 
 import com.chenfu.mapper.PoliceMapper;
-import com.chenfu.netty.PolicemsgChannelRel;
+import com.chenfu.netty.PoliceChannelRel;
 import com.chenfu.pojo.JSONResult;
 import com.chenfu.pojo.Police;
 import com.chenfu.pojo.Policemsg;
@@ -42,7 +42,7 @@ public class PoliceServiceImpl implements PoliceService {
     }
 
     @Override
-    public Set<Policemsg> getOnlinePolices() {
-        return PolicemsgChannelRel.getOnlinePolices();
+    public Set<String> getOnlinePolices() {
+        return PoliceChannelRel.getOnline();
     }
 }

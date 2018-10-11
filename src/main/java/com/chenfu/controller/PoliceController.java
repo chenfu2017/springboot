@@ -24,7 +24,7 @@ public class PoliceController {
     }
 
     @RequestMapping("/showOnline")
-    private Set<Policemsg> getOnlinePolices() {
+    private Set<String> getOnlinePolices() {
         return policeService.getOnlinePolices();
     }
 }

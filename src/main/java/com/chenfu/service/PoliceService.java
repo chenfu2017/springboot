@@ -14,5 +14,5 @@ public interface PoliceService {
 
      JSONResult login(String policeid, String password);
 
-     Set<Policemsg> getOnlinePolices();
+     Set<String> getOnlinePolices();
 }

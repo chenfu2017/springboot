@@ -27,8 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
+    //保存PC端连接
     public static ChannelGroup clients= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
+    //业务处理函数
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         String json = JsonUtils.findObject(msg);
@@ -36,6 +38,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         Channel currentChannel = ctx.channel();
         DataContent dataContent = null;
         try {
+            //转换JOSON
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
             if (dataContent == null) {
                 log.error("msg:{}",msg);
@@ -53,15 +56,20 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
             log.info("from Police:{} ",json);
             Policemsg policemsg = JsonUtils.jsonToPojo(strInnerObject, Policemsg.class);
-            PolicemsgChannelRel.put(policemsg,currentChannel);
-            dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
-            for (Channel channel :clients) {
-                channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
+            if(PoliceChannelRel.isLogin(policemsg.getPoliceid())){
+                dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
+                for (Channel channel :clients) {
+                    channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
+                }
+            } else {
+                JSONResult jsonResult = JSONResult.errorMsg("please login!");
+                currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
+                ctx.close();
             }
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             log.info("from Driver:{} ",json);
             Drivermsg drivermsg = JsonUtils.jsonToPojo(strInnerObject, Drivermsg.class);
-            DrivermsgChannelRel.put(drivermsg,currentChannel);
+            DriverChannelRel.put(drivermsg.getDriverid(),currentChannel);
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
                 channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
@@ -70,9 +78,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             String driverid=drivermsg.getDriverid();
             String policeid = messionService.getPoliceid(driverid);
             if (policeid != null) {
-                Policemsg policemsg = new Policemsg();
-                policemsg.setPoliceid(policeid);
-                Channel policeChannel = PolicemsgChannelRel.getChannel(policemsg);
+                Channel policeChannel = PoliceChannelRel.getChannel(policeid);
                 if (policeChannel==null){
                     for (Channel channel :clients) {
                         channel.writeAndFlush("police:"+policeid+"not online!");
@@ -90,6 +96,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             Police police = JsonUtils.jsonToPojo(strInnerObject, Police.class);
             PoliceService policeService = SpringUtil.getBean(PoliceService.class);
             JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
+            PoliceChannelRel.put(police.getPoliceid(),currentChannel);
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession:{}",json);
@@ -106,8 +113,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         Channel channel =ctx.channel();
         log.info("客户端被移除，channelId为:{}",channel.id().asShortText());
-        PolicemsgChannelRel.removeByChannel(channel);
-        DrivermsgChannelRel.removeByChannel(channel);
+        PoliceChannelRel.removeByChannel(channel);
+        DriverChannelRel.removeByChannel(channel);
         clients.remove(channel);
 
     }
@@ -117,8 +124,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         log.error("exception:{}",cause.getMessage());
         Channel channel =ctx.channel();
         channel.close();
-        PolicemsgChannelRel.removeByChannel(channel);
-        DrivermsgChannelRel.removeByChannel(channel);
+        PoliceChannelRel.removeByChannel(channel);
+        DriverChannelRel.removeByChannel(channel);
         clients.remove(channel);
     }
 }

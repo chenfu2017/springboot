@@ -5,5 +5,5 @@ import com.chenfu.pojo.Drivermsg;
 import java.util.Set;
 
 public interface DriverService {
-    Set<Drivermsg> getOnlineDrivers();
+    Set<String> getOnlineDrivers();
 }

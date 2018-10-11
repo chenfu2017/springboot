@@ -16,7 +16,7 @@ public class driverController {
     private DriverService driverService;
 
     @RequestMapping("/showOnline")
-    public Set<Drivermsg> getonline(){
+    public Set<String> getonline(){
         return driverService.getOnlineDrivers();
     }
 }
