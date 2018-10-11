@@ -81,18 +81,6 @@ public class Policemsg {
         this.createTime = createTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Policemsg policemsg = (Policemsg) o;
-        return Objects.equal(policeid, policemsg.policeid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(policeid);
-    }
 
     @Override
     public String toString() {

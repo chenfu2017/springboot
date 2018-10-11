@@ -37,4 +37,9 @@ public class Server {
 		this.future = server.bind(8888);
 		System.err.println("netty websocket server 启动完毕...");
 	}
+
+	public void newInstance(){
+        mainGroup.shutdownGracefully();
+        subGroup.shutdownGracefully();
+    }
 }

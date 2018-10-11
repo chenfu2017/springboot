@@ -133,19 +133,6 @@ public class Drivermsg {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Drivermsg drivermsg = (Drivermsg) o;
-        return Objects.equal(driverid, drivermsg.driverid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(driverid);
-    }
-
-    @Override
     public String toString() {
         return "Drivermsg{" +
                 "driverid='" + driverid + '\'' +

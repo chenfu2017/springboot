@@ -1,13 +1,11 @@
 package com.chenfu.service.impl;
 
-import com.chenfu.mapper.PoliceMapper;
 import com.chenfu.mapper.PolicemsgMapper;
 import com.chenfu.netty.PoliceChannelRel;
 import com.chenfu.pojo.Policemsg;
 import com.chenfu.service.PolicemsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

@@ -12,6 +12,6 @@
   </resultMap>
 
     <select id="getPolicemsgById" parameterType="String" resultType="Policemsg">
-        select * from policemsg where policeid=#{policeid}
+        select policeid,longtitude,latitude,create_time from policemsg where policeid=#{policeid}
     </select>
 </mapper>

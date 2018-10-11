@@ -6,6 +6,8 @@ import com.chenfu.pojo.Mession;
 import com.chenfu.service.MessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ public class MessionServiceImpl implements MessionService {
     @Autowired
     private MessionMapper messionMapper;
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public JSONResult addMession(String policeid,String driverid) {
         Example example = new Example(Mession.class);
         Example.Criteria criteria = example.createCriteria();
@@ -44,6 +47,7 @@ public class MessionServiceImpl implements MessionService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public String getPoliceid(String driverid) {
 
         Example example = new Example(Mession.class);

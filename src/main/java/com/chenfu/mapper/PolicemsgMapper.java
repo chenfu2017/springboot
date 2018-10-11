@@ -6,4 +6,5 @@ import com.chenfu.utils.MyMapper;
 public interface PolicemsgMapper extends MyMapper<Policemsg> {
 
     Policemsg getPolicemsgById(String policeid);
+
 }
