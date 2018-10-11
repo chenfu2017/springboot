@@ -68,7 +68,12 @@ public class JsonUtils {
         return null;
     }
 
-    public static String findObject(String json) {
+    public static String findObject(String json){
+        int index = json.indexOf('{');
+        return json.substring(index,json.length());
+    }
+
+    public static String findInnerObject(String json) {
         char[] chars = json.toCharArray();
         int i =0;
         int j =chars.length-1;

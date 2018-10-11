@@ -31,8 +31,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        String json = msg.substring(2);
-        String strObject = JsonUtils.findObject(json);
+        String json = JsonUtils.findObject(msg);
+        String strInnerObject = JsonUtils.findInnerObject(json);
         Channel currentChannel = ctx.channel();
         DataContent dataContent = null;
         try {
@@ -52,7 +52,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
         Integer action = dataContent.getAction();
         if (action == MsgActionEnum.POLICE_COORDIANATE.type) {
             log.info("from Police:{} ",json);
-            Policemsg policemsg = JsonUtils.jsonToPojo(strObject, Policemsg.class);
+            Policemsg policemsg = JsonUtils.jsonToPojo(strInnerObject, Policemsg.class);
             PolicemsgChannelRel.put(policemsg,currentChannel);
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
@@ -60,7 +60,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             }
         }else if (action == MsgActionEnum.DRIVER_COORDIANATE.type) {
             log.info("from Driver:{} ",json);
-            Drivermsg drivermsg = JsonUtils.jsonToPojo(strObject, Drivermsg.class);
+            Drivermsg drivermsg = JsonUtils.jsonToPojo(strInnerObject, Drivermsg.class);
             DrivermsgChannelRel.put(drivermsg,currentChannel);
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE_TO_PC.type);
             for (Channel channel :clients) {
@@ -87,13 +87,13 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             clients.add(currentChannel);
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
             log.info("police connect:{}",json);
-            Police police = JsonUtils.jsonToPojo(strObject, Police.class);
+            Police police = JsonUtils.jsonToPojo(strInnerObject, Police.class);
             PoliceService policeService = SpringUtil.getBean(PoliceService.class);
             JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession:{}",json);
-            Mession mession = JsonUtils.jsonToPojo(strObject,Mession.class);
+            Mession mession = JsonUtils.jsonToPojo(strInnerObject,Mession.class);
             String policeid = mession.getPoliceid();
             String driverid = mession.getDriverid();
             MessionService messionService = SpringUtil.getBean(MessionService.class);
