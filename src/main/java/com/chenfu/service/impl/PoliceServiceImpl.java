@@ -4,7 +4,6 @@ import com.chenfu.mapper.PoliceMapper;
 import com.chenfu.netty.PoliceChannelRel;
 import com.chenfu.pojo.JSONResult;
 import com.chenfu.pojo.Police;
-import com.chenfu.pojo.Policemsg;
 import com.chenfu.service.PoliceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,6 @@ public class PoliceServiceImpl implements PoliceService {
 
     @Override
     public Set<String> getOnlinePolices() {
-        return PoliceChannelRel.getOnline();
+        return PoliceChannelRel.getOnlinePolices();
     }
 }

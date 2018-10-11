@@ -10,4 +10,8 @@
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+    <select id="getPolicemsgById" parameterType="String" resultType="Policemsg">
+        select * from policemsg where policeid=#{policeid}
+    </select>
 </mapper>

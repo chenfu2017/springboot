@@ -13,4 +13,8 @@
     <result column="energy" property="energy" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+    <select id="getDrivermsgById" parameterType="String" resultType="Drivermsg">
+        select * from drivermsg where driverid =#{driverid}
+    </select>
 </mapper>

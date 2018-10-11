@@ -22,7 +22,7 @@ public class PoliceChannelRel {
         return policeManager.containsKey(policeid);
     }
 
-    public static Set<String> getOnline(){
+    public static Set<String> getOnlinePolices(){
         return policeManager.keySet();
     }
 

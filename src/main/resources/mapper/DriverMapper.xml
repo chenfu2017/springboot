@@ -11,4 +11,5 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="carnumber" property="carnumber" jdbcType="VARCHAR" />
   </resultMap>
+
 </mapper>
