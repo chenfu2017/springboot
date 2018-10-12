@@ -18,7 +18,7 @@ public class PoliceClient {
             soc = new Socket("127.0.0.1",8888);
             ios= soc.getInputStream();
             dos = new DataOutputStream(soc.getOutputStream());
-            byte[] bytes = new byte[1000];
+            byte[] bytes = new byte[100];
             DataContent connect=new DataContent();
             Police police = new Police();
             police.setPoliceid("lisi");

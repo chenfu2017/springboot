@@ -2,7 +2,6 @@ package com.chenfu.client;
 
 import com.chenfu.pojo.DataContent;
 import com.chenfu.pojo.MsgActionEnum;
-import com.chenfu.pojo.Mession;
 import com.chenfu.utils.JsonUtils;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -17,7 +16,7 @@ public class Client {
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.CLIENT_CONNECT.type);
             dos.writeUTF(JsonUtils.objectToJson(dataContent));
-            byte[] bytes = new byte[200];
+            byte[] bytes = new byte[300];
             InputStream dataIutputStream = soc.getInputStream();
             dataIutputStream.read(bytes);
             String s = new String(bytes, "UTF-8");

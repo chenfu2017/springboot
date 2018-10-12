@@ -1,15 +1,3 @@
-/**
- * @Sharable注解 - 
- *  代表当前Handler是一个可以分享的处理器。也就意味着，服务器注册此Handler后，可以分享给多个客户端同时使用。
- *  如果不使用注解描述类型，则每次客户端请求时，必须为客户端重新创建一个新的Handler对象。
- *  如果handler是一个Sharable的，一定避免定义可写的实例变量。
- *  bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-			@Override
-			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new XxxHandler());
-			}
-		});
- */
 package com.chenfu.netty;
 
 import com.chenfu.SpringUtil;
@@ -17,6 +5,7 @@ import com.chenfu.pojo.*;
 import com.chenfu.service.MessionService;
 import com.chenfu.service.PoliceService;
 import com.chenfu.utils.JsonUtils;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -24,16 +13,16 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
-@Slf4j
-public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
 
-    //保存PC端连接
+@Slf4j
+public class JsonServerHandler extends SimpleChannelInboundHandler<Object> {
     public static ChannelGroup clients= new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     //业务处理函数
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        String json = JsonUtils.findObject(msg);
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        String message =(String)msg;
+        String json = JsonUtils.findObject(message);
         String strInnerObject = JsonUtils.findInnerObject(json);
         Channel currentChannel = ctx.channel();
         DataContent dataContent = null;
@@ -42,14 +31,16 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             dataContent = JsonUtils.jsonToPojo(json, DataContent.class);
             if (dataContent == null) {
                 log.error("msg:{}",msg);
-                log.error("JOSN CONVERT ERROR");
-                currentChannel.writeAndFlush("JOSN CONVERT ERROR");
+                log.error("json convert error!");
+                JSONResult jsonResult = JSONResult.errorMsg("json convert error!");
+                currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
                 return;
             }
         } catch (Exception e) {
             log.error("exception e:{}",e);
-            log.error("JOSN CONVERT ERROR");
-            currentChannel.writeAndFlush("JOSN CONVERT ERROR");
+            log.error("json convert error!");
+            JSONResult jsonResult = JSONResult.errorMsg("json convert error!");
+            currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
             return;
         }
         Integer action = dataContent.getAction();
@@ -62,7 +53,7 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
                     channel.writeAndFlush(JsonUtils.objectToJson(dataContent));
                 }
             } else {
-                JSONResult jsonResult = JSONResult.errorMsg("please login!");
+                JSONResult jsonResult = JSONResult.errorMsg("please login!!!");
                 currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
                 ctx.close();
             }
@@ -81,7 +72,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
                 Channel policeChannel = PoliceChannelRel.getChannel(policeid);
                 if (policeChannel==null){
                     for (Channel channel :clients) {
-                        channel.writeAndFlush("police:"+policeid+"not online!");
+                        JSONResult jsonResult = JSONResult.errorMsg("police:" + policeid + "not online!");
+                        channel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
                     }
                 } else {
                     policeChannel.writeAndFlush(JsonUtils.objectToJson(dataContent));
@@ -89,7 +81,8 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<String> {
             }
         } else if (action == MsgActionEnum.CLIENT_CONNECT.type) {
             log.info("from Client:{}",json);
-            currentChannel.writeAndFlush("SUCCRSS");
+            JSONResult jsonResult = JSONResult.ok();
+            currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
             clients.add(currentChannel);
         } else if (action == MsgActionEnum.POLICE_CONNECT.type) {
             log.info("police connect:{}",json);

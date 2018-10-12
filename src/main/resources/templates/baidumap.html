@@ -4,11 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <style type="text/css">
-        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+        body, html {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+        #allmap{width:100%;height:100%;}
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=c375v6IdS5AkUbqT7tpP0bAS6VwwqGZj"></script>
-    <title>地图展示</title>
-
+    <title>从多个点删除指定点</title>
 </head>
 <body>
 <div id="allmap"></div>
@@ -16,16 +16,40 @@
 </html>
 <script type="text/javascript">
     // 百度地图API功能
-    var map = new BMap.Map("allmap");    // 创建Map实例
-    map.centerAndZoom(new BMap.Point(113.278472,35.193568), 13);  // 初始化地图,设置中心点坐标和地图级别
-    //添加地图类型控件
-    map.addControl(new BMap.MapTypeControl({
-        mapTypes:[
-            BMAP_NORMAL_MAP,
-            BMAP_HYBRID_MAP
-        ]}));
-    map.setCurrentCity("焦作");          // 设置地图显示的城市 此项是必须设置的
-    map.enableScrollWheelZoom(true);//开启鼠标滚轮缩放
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point(113.278472,35.193568);
+    map.centerAndZoom(point, 13);
+    map.disableDoubleClickZoom(true);
 
+
+    // 编写自定义函数,创建标注
+    function addpolice(policeid,longtitude,latitude){
+        var point = new BMap.Point(longtitude,latitude);
+        var marker = new BMap.Marker(point);
+        var label = new BMap.Label(policeid,{offset:new BMap.Size(20,-10)});
+        map.addOverlay(marker);
+        marker.setLabel(label);
+    }
+
+    addpolice("zhangsan",113.278472,35.193568);
+    addpolice("lisi",113.235472,35.193568);
+    function changepolice(policeid,longtitude,latitude) {
+        for (var i = 0; i < allOverlay.length -1; i++){
+            if(allOverlay[i].getLabel().content == policeid){
+                var p = allOverlay[i].getPosition();       //获取marker的位置
+                alert("marker的位置是" + p.lng + "," + p.lat);
+            }
+        }
+    }
+
+    function deletepolice(policeid){
+        var allOverlay = map.getOverlays();
+        for (var i = 0; i < allOverlay.length -1; i++){
+            if(allOverlay[i].getLabel().content == policeid){
+                map.removeOverlay(allOverlay[i]);
+                return false;
+            }
+        }
+        return true;
+    }
 </script>
-

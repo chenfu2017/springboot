@@ -70,6 +70,9 @@ public class JsonUtils {
 
     public static String findObject(String json){
         int index = json.indexOf('{');
+        if(index==-1){
+            return json;
+        }
         return json.substring(index,json.length());
     }
 
