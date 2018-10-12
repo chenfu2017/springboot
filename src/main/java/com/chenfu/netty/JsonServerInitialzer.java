@@ -20,6 +20,5 @@ public class JsonServerInitialzer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new StringEncoder());
         pipeline.addLast(new JsonServerHandler());
 
-
     }
 }

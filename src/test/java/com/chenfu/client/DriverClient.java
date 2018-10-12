@@ -15,11 +15,11 @@ public class DriverClient {
 
     public static void main(String[] args) {
         try {
-            Socket soc = new Socket("127.0.0.1",8888);
+            Socket soc = new Socket("120.78.150.161",8888);
             DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.DRIVER_COORDIANATE.type);
-            Drivermsg drivermsg = new Drivermsg("zhangsan",123.123,121.123,2,3,4);
+            Drivermsg drivermsg = new Drivermsg("driver",123.123,121.123,2,3,4);
             dataContent.setObject(drivermsg);
             String json = JsonUtils.objectToJson(dataContent);
 //            System.out.println(json);

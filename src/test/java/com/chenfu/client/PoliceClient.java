@@ -15,33 +15,39 @@ public class PoliceClient {
         InputStream ios = null;
         String s =null;
         try{
-            soc = new Socket("127.0.0.1",8888);
+            soc = new Socket("120.78.150.161",8888);
             ios= soc.getInputStream();
             dos = new DataOutputStream(soc.getOutputStream());
-            byte[] bytes = new byte[100];
+            byte[] bytes = new byte[300];
             DataContent connect=new DataContent();
             Police police = new Police();
-            police.setPoliceid("lisi");
+            police.setPoliceid("police");
             police.setPassword("123456");
             connect.setAction(MsgActionEnum.POLICE_CONNECT.type);
             connect.setObject(police);
             String json = JsonUtils.objectToJson(connect);
-            System.out.println(json);
             dos.writeUTF(json);
             Thread.sleep(2000);
             ios.read(bytes);
-            System.out.println(new String(bytes, "UTF-8"));
+            json =new String(bytes, "UTF-8");
+            JSONResult jsonResult = JsonUtils.jsonToPojo(json,JSONResult.class);
+            if(jsonResult.getStatus()==200){
+                System.out.println("登陆成功");
+            }else {
+                System.out.println("登陆失败");
+                return;
+            }
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.POLICE_COORDIANATE.type);
-            Policemsg policemsg = new Policemsg("lisi",133.12, 123.123);
+            Policemsg policemsg = new Policemsg("police",133.12, 123.123);
             dataContent.setObject(policemsg);
             json = JsonUtils.objectToJson(dataContent);
             System.out.println(json);
             dos.writeUTF(json);
             ios= soc.getInputStream();
-            while (true) {
+            while (true){
                 ios.read(bytes);
-                json = new String(bytes, "UTF-8");
+                s = new String(bytes, "UTF-8");
                 System.out.println(s);
             }
         }catch (Exception e){
