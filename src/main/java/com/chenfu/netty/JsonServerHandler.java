@@ -88,7 +88,9 @@ public class JsonServerHandler extends SimpleChannelInboundHandler<Object> {
             Police police = JsonUtils.jsonToPojo(strInnerObject, Police.class);
             PoliceService policeService = SpringUtil.getBean(PoliceService.class);
             JSONResult jsonResult = policeService.login(police.getPoliceid(),police.getPassword());
-            PoliceChannelRel.put(police.getPoliceid(),currentChannel);
+            if(jsonResult.getStatus()==200){
+                PoliceChannelRel.put(police.getPoliceid(),currentChannel);
+            }
             currentChannel.writeAndFlush(JsonUtils.objectToJson(jsonResult));
         } else if (action==MsgActionEnum.MESSION.type){
             log.info("a mession:{}",json);

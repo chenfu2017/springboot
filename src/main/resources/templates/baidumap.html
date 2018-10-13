@@ -28,8 +28,29 @@
     map.enableScrollWheelZoom(true);
     map.disableDoubleClickZoom(true);
 
-    addpolice("zhangsan",113.278472,35.193568);
-    adddriver("lisi",113.235472,35.193568);
+
+    function chujing(){
+        var p1 = new BMap.Point(113.258472,35.157568);
+        var p2 = new BMap.Point(113.235472,35.179568);
+        var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+        driving.search(p1, p2);
+    }
+
+    function changeColor(id){
+        var allOverlay = map.getOverlays();
+        for (var i = 0; i < allOverlay.length -1; i++){
+            if(allOverlay[i].getLabel().content == id){
+                var icon = new BMap.Icon("../static/img/redcar.png", new BMap.Size(33,25));
+                allOverlay[i].setIcon(icon);
+            }
+        }
+    }
+    addpolice("张警官",113.258472,35.157568);
+    addpolice("郑警官（npc）", 113.298472,35.157568);
+    adddriver("鲁A.8M123",113.235472,35.179568);
+    adddriver("冀B.30000(npc)",113.289472,35.191568);
+    adddriver("豫N.38090(npc)",113.216472,35.197568);
+    adddriver("HPU.30000(npc)",113.226472,35.139568);
 
 
     // 编写自定义函数,创建标注
@@ -37,6 +58,7 @@
         var myIcon = new BMap.Icon("../static/img/police.png", new BMap.Size(25,25));
         var	point = new BMap.Point(longtitude,latitude);
         var marker = new BMap.Marker(point,{icon:myIcon});
+        marker.addEventListener("click",chujing);
         var label = new BMap.Label(policeid,{offset:new BMap.Size(25,-17)});
         map.addOverlay(marker);
         marker.setLabel(label);
@@ -55,9 +77,8 @@
         return false;
     }
 
-
     function adddriver(driverid,longtitude,latitude){
-        var myIcon = new BMap.Icon("../static/img/car.png", new BMap.Size(33,25));
+        var myIcon = new BMap.Icon("../static/img/bluecar.png", new BMap.Size(33,25));
         var	point = new BMap.Point(longtitude,latitude);
         var marker = new BMap.Marker(point,{icon:myIcon});
         var label = new BMap.Label(driverid,{offset:new BMap.Size(30,-13)});
@@ -65,6 +86,7 @@
         marker.setLabel(label);
         return true;
     }
+
 
     function changedriver(driverid,longtitude,latitude) {
         var allOverlay = map.getOverlays();

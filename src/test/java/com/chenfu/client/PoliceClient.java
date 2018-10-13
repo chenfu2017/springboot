@@ -27,7 +27,6 @@ public class PoliceClient {
             connect.setObject(police);
             String json = JsonUtils.objectToJson(connect);
             dos.writeUTF(json);
-            Thread.sleep(2000);
             ios.read(bytes);
             json =new String(bytes, "UTF-8");
             JSONResult jsonResult = JsonUtils.jsonToPojo(json,JSONResult.class);
@@ -46,6 +45,9 @@ public class PoliceClient {
             dos.writeUTF(json);
             ios= soc.getInputStream();
             while (true){
+                if (soc.isClosed()) {
+                    break;
+                }
                 ios.read(bytes);
                 s = new String(bytes, "UTF-8");
                 System.out.println(s);
