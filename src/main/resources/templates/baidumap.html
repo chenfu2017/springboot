@@ -8,7 +8,7 @@
         #allmap{width:100%;height:100%;}
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=c375v6IdS5AkUbqT7tpP0bAS6VwwqGZj"></script>
-    <title>从多个点删除指定点</title>
+    <title>交警小助手</title>
 </head>
 <body>
 <div id="allmap"></div>
@@ -21,35 +21,65 @@
     map.centerAndZoom(point, 13);
     map.disableDoubleClickZoom(true);
 
+    addpolice("zhangsan",113.278472,35.193568);
+    adddriver("lisi",113.235472,35.193568);
+
 
     // 编写自定义函数,创建标注
     function addpolice(policeid,longtitude,latitude){
-        var point = new BMap.Point(longtitude,latitude);
-        var marker = new BMap.Marker(point);
-        var label = new BMap.Label(policeid,{offset:new BMap.Size(20,-10)});
+        var myIcon = new BMap.Icon("../static/img/police.png", new BMap.Size(25,25));
+        var	point = new BMap.Point(longtitude,latitude);
+        var marker = new BMap.Marker(point,{icon:myIcon});
+        var label = new BMap.Label(policeid,{offset:new BMap.Size(25,-17)});
         map.addOverlay(marker);
         marker.setLabel(label);
+        return true;
     }
 
-    addpolice("zhangsan",113.278472,35.193568);
-    addpolice("lisi",113.235472,35.193568);
     function changepolice(policeid,longtitude,latitude) {
+        var allOverlay = map.getOverlays();
+        var point = new BMap.Point(longtitude,latitude);
         for (var i = 0; i < allOverlay.length -1; i++){
             if(allOverlay[i].getLabel().content == policeid){
-                var p = allOverlay[i].getPosition();       //获取marker的位置
-                alert("marker的位置是" + p.lng + "," + p.lat);
+                allOverlay[i].setPosition(point);
+                return true;
             }
         }
+        return false;
     }
 
-    function deletepolice(policeid){
+
+    function adddriver(driverid,longtitude,latitude){
+        var myIcon = new BMap.Icon("../static/img/car.png", new BMap.Size(33,25));
+        var	point = new BMap.Point(longtitude,latitude);
+        var marker = new BMap.Marker(point,{icon:myIcon});
+        var label = new BMap.Label(driverid,{offset:new BMap.Size(30,-13)});
+        map.addOverlay(marker);
+        marker.setLabel(label);
+        return true;
+    }
+
+    function changedriver(driverid,longtitude,latitude) {
+        var allOverlay = map.getOverlays();
+        var point = new BMap.Point(longtitude,latitude);
+        for (var i = 0; i < allOverlay.length -1; i++){
+            if(allOverlay[i].getLabel().content == policeid){
+                allOverlay[i].setPosition(point);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    function removeOverlay(id){
         var allOverlay = map.getOverlays();
         for (var i = 0; i < allOverlay.length -1; i++){
-            if(allOverlay[i].getLabel().content == policeid){
+            if(allOverlay[i].getLabel().content == id){
                 map.removeOverlay(allOverlay[i]);
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 </script>

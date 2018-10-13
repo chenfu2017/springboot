@@ -11,7 +11,7 @@ public class Client {
 
     public static void main(String[] args) {
         try{
-            Socket soc = new Socket("120.78.150.161",8888);
+            Socket soc = new Socket("127.0.0.1",8888);
             DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
             DataContent dataContent = new DataContent();
             dataContent.setAction(MsgActionEnum.CLIENT_CONNECT.type);

@@ -15,7 +15,7 @@ public class PoliceClient {
         InputStream ios = null;
         String s =null;
         try{
-            soc = new Socket("120.78.150.161",8888);
+            soc = new Socket("127.0.0.1",8888);
             ios= soc.getInputStream();
             dos = new DataOutputStream(soc.getOutputStream());
             byte[] bytes = new byte[300];
@@ -31,6 +31,7 @@ public class PoliceClient {
             ios.read(bytes);
             json =new String(bytes, "UTF-8");
             JSONResult jsonResult = JsonUtils.jsonToPojo(json,JSONResult.class);
+            System.out.println(jsonResult);
             if(jsonResult.getStatus()==200){
                 System.out.println("登陆成功");
             }else {
@@ -42,7 +43,6 @@ public class PoliceClient {
             Policemsg policemsg = new Policemsg("police",133.12, 123.123);
             dataContent.setObject(policemsg);
             json = JsonUtils.objectToJson(dataContent);
-            System.out.println(json);
             dos.writeUTF(json);
             ios= soc.getInputStream();
             while (true){
