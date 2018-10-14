@@ -68,10 +68,12 @@
     function changepolice(policeid,longtitude,latitude) {
         var allOverlay = map.getOverlays();
         var point = new BMap.Point(longtitude,latitude);
-        for (var i = 0; i < allOverlay.length -1; i++){
-            if(allOverlay[i].getLabel().content == policeid){
-                allOverlay[i].setPosition(point);
-                return true;
+        for (var i = 0; i < allOverlay.length; i++){
+            if(allOverlay[i].Qa==true){
+                if(allOverlay[i].getLabel().content == policeid){
+                    allOverlay[i].setPosition(point);
+                    return true;
+                }
             }
         }
         return false;
@@ -91,19 +93,26 @@
     function changedriver(driverid,longtitude,latitude) {
         var allOverlay = map.getOverlays();
         var point = new BMap.Point(longtitude,latitude);
-        for (var i = 0; i < allOverlay.length -1; i++){
-            if(allOverlay[i].getLabel().content == policeid){
-                allOverlay[i].setPosition(point);
-                return true;
+        for (var i = 0; i < allOverlay.length; i++){
+            if(allOverlay[i].Qa==true){
+                if(allOverlay[i].getLabel().content == driverid){
+                    allOverlay[i].setPosition(point);
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    function get() {
+        var allOverlay = map.getOverlays();
+        console.log(allOverlay);
+    }
+
 
     function removeOverlay(id){
         var allOverlay = map.getOverlays();
-        for (var i = 0; i < allOverlay.length -1; i++){
+        for (var i = 0; i < allOverlay.length; i++){
             if(allOverlay[i].getLabel().content == id){
                 map.removeOverlay(allOverlay[i]);
                 return true;
