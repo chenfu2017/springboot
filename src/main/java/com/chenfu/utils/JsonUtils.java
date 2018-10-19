@@ -1,11 +1,12 @@
 package com.chenfu.utils;
 
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import sun.font.TrueTypeFont;
+
+import java.util.List;
+
+
 
 /**
  * @Description: 自定义响应结构, 转换类

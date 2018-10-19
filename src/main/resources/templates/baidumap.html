@@ -113,9 +113,11 @@
     function removeOverlay(id){
         var allOverlay = map.getOverlays();
         for (var i = 0; i < allOverlay.length; i++){
-            if(allOverlay[i].getLabel().content == id){
-                map.removeOverlay(allOverlay[i]);
-                return true;
+            if(allOverlay[i].Qa==true) {
+                if (allOverlay[i].getLabel().content == id) {
+                    map.removeOverlay(allOverlay[i]);
+                    return true;
+                }
             }
         }
         return false;
