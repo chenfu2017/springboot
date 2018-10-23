@@ -29,13 +29,4 @@ public class Policemsg {
         this.longtitude = longtitude;
         this.latitude = latitude;
     }
-
-    @Override
-    public String toString() {
-        return "Policemsg{" +
-                "policeid='" + policeid + '\'' +
-                ", longtitude=" + longtitude +
-                ", latitude=" + latitude +
-                '}';
-    }
 }
