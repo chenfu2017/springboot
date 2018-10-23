@@ -1,8 +1,12 @@
 package com.chenfu.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @Description: 发送消息的动作 枚举
  */
+@Getter
 public enum MsgActionEnum {
 
     POLICE_COORDIANATE(1, "交警坐标"),
@@ -19,9 +23,5 @@ public enum MsgActionEnum {
     MsgActionEnum(Integer type, String content) {
         this.type = type;
         this.content = content;
-    }
-
-    public Integer getType() {
-        return type;
     }
 }

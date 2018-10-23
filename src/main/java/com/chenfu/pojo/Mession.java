@@ -1,8 +1,12 @@
 package com.chenfu.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 import javax.persistence.*;
-
+@Getter
+@Setter
 public class Mession {
     @Id
     private String policeid;
@@ -21,60 +25,5 @@ public class Mession {
     public Mession(String policeid, String driverid) {
         this.policeid = policeid;
         this.driverid = driverid;
-    }
-    /**
-     * @return policeid
-     */
-    public String getPoliceid() {
-        return policeid;
-    }
-
-    /**
-     * @param policeid
-     */
-    public void setPoliceid(String policeid) {
-        this.policeid = policeid;
-    }
-
-    /**
-     * @return driverid
-     */
-    public String getDriverid() {
-        return driverid;
-    }
-
-    /**
-     * @param driverid
-     */
-    public void setDriverid(String driverid) {
-        this.driverid = driverid;
-    }
-
-    /**
-     * @return finish
-     */
-    public Boolean getFinish() {
-        return finish;
-    }
-
-    /**
-     * @param finish
-     */
-    public void setFinish(Boolean finish) {
-        this.finish = finish;
-    }
-
-    /**
-     * @return create_time
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * @param createTime
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 }
