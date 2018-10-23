@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 
  * @Title: LeeJSONResult.java
@@ -18,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 				502：拦截器拦截到用户token出错
  * 				555：异常抛出信息
 */
+@Getter
+@Setter
 public class JSONResult {
 
     // 定义jackson对象
@@ -82,29 +87,6 @@ public class JSONResult {
         return this.status == 200;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
 
     public static JSONResult formatToPojo(String jsonData, Class<?> clazz) {
         try {
@@ -150,14 +132,6 @@ public class JSONResult {
             return null;
         }
     }
-
-	public String getOk() {
-		return ok;
-	}
-
-	public void setOk(String ok) {
-		this.ok = ok;
-	}
 
     @Override
     public String toString() {

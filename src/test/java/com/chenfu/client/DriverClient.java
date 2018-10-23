@@ -24,7 +24,7 @@ public class DriverClient {
             String json = JsonUtils.objectToJson(dataContent);
 //            System.out.println(json);
             dos.writeUTF(json);
-            byte[] bytes = new byte[100];
+            byte[] bytes = new byte[150];
             InputStream ios = soc.getInputStream();
             ios.read(bytes);
             String s = new String(bytes, "UTF-8");
