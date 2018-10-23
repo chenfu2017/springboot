@@ -2,10 +2,6 @@ package com.chenfu.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-
-/**
- * @Description: 发送消息的动作 枚举
- */
 @Getter
 public enum MsgActionEnum {
 
